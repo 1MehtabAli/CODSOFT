@@ -1,0 +1,39 @@
+package Codsoft;
+import java.util.Scanner;
+public class NumberGame{
+	public static void main(String args[]) {
+	   int num,guess,attempts=0;
+	   Scanner s=new Scanner(System.in);
+	   System.out.print("Enter any Number : ");
+	    num=s.nextInt();
+	      System.out.println("Enter the Guess Number :");
+	         guess=s.nextInt();
+	         attempts++;
+	         while(guess!=num) {
+	    	   if(attempts>10) {
+	   	    System.out.println("limit of attempts exceed");
+	   	   	break;
+	    	   }
+
+	   	   if(guess>num) {
+		System.out.println("Too High");
+	           }
+	
+	           else if (guess<num) {
+		System.out.println("Too Low");
+	            }
+	
+	 System.out.println("enter number again");
+		guess=s.nextInt();
+		attempts++;
+	       }
+	      if(guess==num && attempts<=3)
+	      {
+	        System.out.println("correct !");
+	        }
+	      System.out.println("Total attamepts taken is " +attempts);
+	}
+}	
+
+	
+	    
