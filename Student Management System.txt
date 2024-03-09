@@ -1,0 +1,178 @@
+package regular;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Student {
+     String name;
+     int rollNumber;
+     String grade;
+
+    public Student(String name, int rollNumber, String grade) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.grade = grade;
+    }
+    public String getName() {
+        return name;
+    }
+    public int getRollNumber() {
+        return rollNumber;
+    }
+    public String getGrade() {
+        return grade;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Roll Number: " + rollNumber + ", Grade: " + grade;
+    }
+}
+
+class StudentManagementSystem {
+     List<Student> students;
+
+    public StudentManagementSystem() {
+        this.students = new ArrayList<>();
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+
+    public void removeStudent(int rollNumber) {
+        students.removeIf(student -> student.getRollNumber() == rollNumber);
+    }
+
+    public Student searchStudent(int rollNumber) {
+        for (Student student : students) {
+            if (student.getRollNumber() == rollNumber) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    public List<Student> getAllStudents() {
+        return students;
+    }
+
+    public void loadStudentsFromFile(String filename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String name = parts[0].trim();
+                    int rollNumber = Integer.parseInt(parts[1].trim());
+                    String grade = parts[2].trim();
+                    addStudent(new Student(name, rollNumber, grade));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveStudentsToFile(String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Student student : students) {
+                writer.write(student.getName() + "," + student.getRollNumber() + "," + student.getGrade() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+public class regex {
+     static Scanner scanner = new Scanner(System.in);
+     static StudentManagementSystem sms = new StudentManagementSystem();
+
+    public static void main(String[] args) {
+        sms.loadStudentsFromFile("students.txt");
+
+        while (true) {
+            System.out.println("1. Add Student");
+            System.out.println("2. Remove Student");
+            System.out.println("3. Search Student");
+            System.out.println("4. Display All Students");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            char choice = scanner.next().charAt(0);
+            scanner.nextLine(); // Consume newline
+     while(true)
+           if(choice=='1') {
+                 addStudent();
+                    break;
+           }
+           else if(choice=='2') {
+                    removeStudent();
+                    break;
+           }
+           else if(choice=='3') {
+                    searchStudent();
+                    break;
+           }
+           else if(choice=='4') {
+                    displayAllStudents();
+                    break;
+            }
+           else if(choice=='5') {
+                    sms.saveStudentsToFile("students.txt");
+                    System.out.println("Exiting...");
+                    System.exit(0);
+           }
+           else {
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static void addStudent() {
+        System.out.print("Enter student name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter roll number: ");
+        int rollnumber = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.print("Enter grade: ");
+        String grade = scanner.nextLine();
+
+        sms.addStudent(new Student(name, rollnumber, grade));
+        System.out.println("Student added successfully.");
+    }
+
+    private static void removeStudent() {
+        System.out.print("Enter roll number of student to remove: ");
+        int rollNumber = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        sms.removeStudent(rollNumber);
+        System.out.println("Student removed successfully.");
+    }
+
+    private static void searchStudent() {
+        System.out.print("Enter roll number of student to search: ");
+        int rollNumber = scanner.nextInt();
+        scanner.nextLine(); 
+        Student student = sms.searchStudent(rollNumber);
+        if (student != null) {
+            System.out.println("Student found:");
+            System.out.println(student);
+        } else {
+            System.out.println("Student not found.");
+        }
+    }
+
+    private static void displayAllStudents() {
+        List<Student> students = sms.getAllStudents();
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+        } else {
+            for (Student student : students) {
+                System.out.println(student);
+            }
+        }
+    }
+}
